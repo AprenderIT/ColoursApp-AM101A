@@ -1,0 +1,13 @@
+﻿@page
+@model ColourWeb.Pages.ConfiginfoModel
+@{
+    ViewData["Title"] = "Configinfo";
+}
+
+<h3>Info de esta Aplicación</h3>
+<p> Esta aplicación fue desarrollada por <a href="https://aprender.it/">AprenderIT</a>, tomando como base la originalmente publicada por <a href="https://github.com/markharrison/Lab_APIM_Original">Mark Harrison</a>.</p>
+<p>Su uso es exclusivo para fines educativos y forma parte del contenido de los <a href="https://aprender.it/cursos/">cursos publicados</a>.</p>
+<p>Info adicional de contexto:</p>
+@Html.Raw(Model.strConfigHtml)
+<br />
+<a href="/">Home</a>

@@ -1,0 +1,105 @@
+name: 🚀 ColoursApp in Prod
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    types:
+      - closed
+    branches:
+      - 'main'
+
+   # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+
+jobs:
+  coloursapi:
+    if: github.event.pull_request.merged == true  ||
+    name: 🔨 ColoursAPI
+    runs-on: windows-latest
+    env:
+      working-directory-coloursapi: ./src/ColoursAPI/
+
+    steps:
+    - name: 🚚 Get latest code for ColoursAPI
+      uses: actions/checkout@v2
+    - name: 💾 Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: 💽 Restore dependencies for ColoursAPI
+      run: dotnet restore
+      working-directory: ${{env.working-directory-coloursapi}}
+    - name: 🥁 Build ColoursAPI
+      run: dotnet publish -o ./output --runtime win-x64 --self-contained
+      working-directory: ${{env.working-directory-coloursapi}}
+    - name: 🌐 Deploy ColoursAPI throught FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ftp.puertotec.com
+        username: ${{ secrets.aprenderit_ftpuser }}
+        password: ${{ secrets.aprenderit_ftppassword }}
+        protocol: ftp
+        local-dir: ./src/ColoursAPI/output/
+        server-dir: /recursosit_ftp/coloursapi.app.aprender.it_a0tfDHlR/wwwroot/
+
+  coloursweb:
+    name: 🔨 ColoursWeb
+    runs-on: windows-latest
+    env:
+      working-directory-coloursweb: ./src/ColoursWeb/
+
+    steps:
+    - name: 🚚 Get latest code for ColoursWeb
+      uses: actions/checkout@v2
+    - name: 💾 Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: 💽 Restore dependencies for ColoursWeb
+      run: dotnet restore
+      working-directory: ${{env.working-directory-coloursweb}}
+    - name: 🥁 Build
+      run: dotnet publish -o ./output --runtime win-x64 --self-contained
+      working-directory: ${{env.working-directory-coloursweb}}
+    - name: 🌐 Deploy ColoursWeb throught FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ftp.puertotec.com
+        username: ${{ secrets.aprenderit_ftpuser }}
+        password: ${{ secrets.aprenderit_ftppassword }}
+        protocol: ftp
+        local-dir: ./src/ColoursWeb/output/
+        server-dir: /recursosit_ftp/coloursweb.app.aprender.it_yXS1J2qA/wwwroot/
+        
+        
+  coloursIds:
+    name: 🔨 Identity Server 
+    runs-on: windows-latest
+    env:
+      working-directory-coloursids: ./src/ColoursIds/
+
+    steps:
+    - name: 🚚 Get latest code for ColoursIds
+      uses: actions/checkout@v2
+    - name: 💾 Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: 💽 Restore dependencies for ColoursIdentityServer
+      run: dotnet restore
+      working-directory: ${{env.working-directory-coloursids}}
+    - name: 🥁 Build
+      run: dotnet publish -o ./output --runtime win-x64 --self-contained
+      working-directory: ${{env.working-directory-coloursids}}
+    - name: 🌐 Deploy Identity Server throught FTP
+      uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      with:
+        server: ftp.puertotec.com
+        username: ${{ secrets.aprenderit_ftpuser }}
+        password: ${{ secrets.aprenderit_ftppassword }}
+        protocol: ftp
+        local-dir: ./src/ColoursIds/output/
+        server-dir: /recursosit_ftp/coloursids.app.aprender.it_8cya7WHw/wwwroot/

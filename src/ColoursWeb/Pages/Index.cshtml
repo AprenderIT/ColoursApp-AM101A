@@ -1,0 +1,51 @@
+﻿@page
+@model ColourWeb.Pages.IndexModel
+@{
+    ViewData["Title"] = "Colour Home";
+}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container-fluid">
+
+    <p>Vamos a hacer un experimento con colores. Cada una de las bolas de más abajo se rellenará con un color cuando inicies el juego.</p>
+
+    <hr style="border-top: 2px solid black" />
+
+    <div id="idBalls"></div>
+
+    <div style="margin-top: 10px;">
+        @*@if (!Model.Direct)
+        {
+            <button class="btn btn-primary" id="idButStart" onclick="doStart(); return false;">Iniciar</button>
+        }
+        else
+        {
+            <a class="btn btn-primary" id="idButStart" asp-page="Index" asp-page-handler="OnClick"> Iniciar </a>
+            <input type="hidden" id="colours" value=@Model.Colors />
+        }*@
+        <button class="btn btn-primary" id="idButStart" onclick="doStart(); return false;">Iniciar</button>
+        <button class="btn btn-danger" id="idButReset" style="display:none;"  onclick="window.location.href='/'; return false;">Resetear</button>
+    </div>
+
+    <hr style="border-top: 2px solid black" />
+
+    <p>Sobre el juego: &nbsp;&nbsp;<span id="idErrorText" style="color: red;"></span></p>
+    <ul>
+        <li>API: <span id="idAPIUrl"</span></li>
+        <li>Detalles: cuando inicias el juego, se realizará una llamada a la API configurada para solicitar un color aleatorio. Si la operación es exitosa, se rellenará ese color en un lugar aleatorio del panel superior.</li>
+    </ul>
+
+</div>
+
+
+@section scripts {
+
+
+<script>
+       var colours = document.getElementById('colours')?.value;
+            console.log(colours)
+    $(document).ready(function () {
+        doDefaultReady();
+    });
+</script>
+}
