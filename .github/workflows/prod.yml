@@ -16,7 +16,7 @@ on:
 
 jobs:
   coloursapi:
-    if: github.event.pull_request.merged == true  ||
+    if: github.event.pull_request.merged == true
     name: 🔨 ColoursAPI
     runs-on: windows-latest
     env:
