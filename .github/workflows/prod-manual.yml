@@ -1,19 +1,10 @@
 name: 🚀 ColoursApp in Prod
 
 on:
-  push:
-    branches:
-      - 'main'
-  pull_request:
-    types:
-      - closed
-    branches:
-      - 'main'
-
+  workflow_dispatch:
 
 jobs:
   coloursapi:
-    if: github.event.pull_request.merged == true
     name: 🔨 ColoursAPI
     runs-on: windows-latest
     env:
@@ -43,7 +34,6 @@ jobs:
         server-dir: /recursosit_ftp/coloursapi.app.aprender.it_a0tfDHlR/wwwroot/
 
   coloursweb:
-    if: github.event.pull_request.merged == true
     name: 🔨 ColoursWeb
     runs-on: windows-latest
     env:
@@ -74,7 +64,6 @@ jobs:
         
         
   coloursIds:
-    if: github.event.pull_request.merged == true
     name: 🔨 Identity Server 
     runs-on: windows-latest
     env:
