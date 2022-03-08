@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer;
+﻿using ColoursIds.Models;
+using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Microsoft.Extensions.Configuration;
 
@@ -12,75 +13,27 @@ public static class Config
     public static IEnumerable<IdentityResource> IdentityResources =>
         new IdentityResource[]
         {
-            new IdentityResources.OpenId(),
-            new IdentityResources.Profile(),
+        new IdentityResources.OpenId(),
+        new IdentityResources.Profile(),
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
         {
-            new ApiScope("api1", "MyAPI")
+        new ApiScope("api1", "MyAPI")
         };
 
-    public static IEnumerable<Client> Clients =>
-        new Client[]
+    public static IEnumerable<Client> Clients(IEnumerable<ClientConfig> config)
+    {
+        return config.Select(x => new Client()
         {
-            //// API
-            //new Client
-            //{
-            //    ClientId = "client",
-            //    ClientSecrets = { new Secret("secret".Sha256()) },
-
-            //    AllowedGrantTypes = GrantTypes.ClientCredentials,
-            //    // scopes that client has access to
-            //    AllowedScopes = { "api1" }
-            //},
-
-            // Web
-            new Client
-            {
-                ClientId = config.GetValue<string>("WebClient:Id"),
-                ClientSecrets = { new Secret(config.GetValue<string>("WebClient:Secret").Sha256()) },
-
-                AllowedGrantTypes = GrantTypes.Code,
-                // where to redirect to after login
-                RedirectUris = { config.GetValue<string>("WebClient:RedirectUri") },
-
-                // where to redirect to after logout
-                PostLogoutRedirectUris = { config.GetValue<string>("WebClient:LogoutRedirectUri") },
-
-                AllowOfflineAccess = true,
-
-                AllowedScopes = new List<string>
-                {
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    "api1",
-                }
-            },
-
-            // API Management
-            new Client
-            {
-                ClientId = config.GetValue<string>("APIMClient:Id"),
-                ClientSecrets = { new Secret(config.GetValue<string>("APIMClient:Secret").Sha256()) },
-
-                AllowedGrantTypes = GrantTypes.Implicit,
-                // where to redirect to after login
-                RedirectUris = { config.GetValue<string>("APIMClient:RedirectUri") },
-
-                // where to redirect to after logout
-                PostLogoutRedirectUris = { config.GetValue<string>("APIMClient:LogoutRedirectUri") },
-
-                AllowOfflineAccess = true,
-
-                AllowedScopes = new List<string>
-                {
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    "api1",
-                }
-            },
-
-        };
+            ClientId = x.Id,
+            ClientSecrets = { new Secret(x.Secret.Sha256()) } ,
+            AllowedGrantTypes = x.AllowedGrantTypes,
+            RedirectUris = { x.RedirectUri },
+            PostLogoutRedirectUris = { x.LogoutRedirectUri },
+            AllowOfflineAccess = x.AllowOfflineAccess,
+            AllowedScopes = x.AllowedScopes
+        });
+    }
 }

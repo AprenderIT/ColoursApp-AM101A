@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using ColoursIds.Models;
 
 namespace IdentityServerAspNetIdentity;
 
@@ -14,7 +15,8 @@ internal static class HostingExtensions
 
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-
+        var clientsFromConfig = builder.Configuration.GetSection("IdentityServer:Clients").Get<IEnumerable<ClientConfig>>();
+        
         builder.Services.AddRazorPages();
 
         builder.Services.Configure<IISOptions>(iis =>
@@ -40,7 +42,7 @@ internal static class HostingExtensions
             .AddIdentityServer()
             .AddDeveloperSigningCredential()
             .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddInMemoryClients(Config.Clients)
+            .AddInMemoryClients(Config.Clients(clientsFromConfig))
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddAspNetIdentity<ApplicationUser>();
 
